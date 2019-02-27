@@ -1,6 +1,38 @@
 package Lab2;
 
-public abstract class Part {
+public class Test {
+
+	public static void main(String[] args) {
+		
+		Iterator it = new Iterator(4);
+		it.getParts()[0] = new Motherboard("Motherboard", "ABC", 123, new PricePolicy(), 
+				new Brand("Samsung"));
+		it.getParts()[1] = new Memory("Memory", "DEF", 456, new PricePolicy(), 
+				new Brand("Intel"), "16 GB");
+		it.getParts()[2] = new HardDisk("Hard Disk", "GHI", 259, new PricePolicy(), 
+				new Brand("Western Digital"), 
+				"1 TB", "2.5 inc");
+		
+		it.display();
+		System.out.println("Total Price : " + it.totalPrice() + "\n\n");
+		
+		
+		it.getParts()[3] = new OpticalDiskDriver("Optical Disk Driver","ABC", 78, 
+				new PricePolicy(), new Brand("HTC"));
+		
+		it.getParts()[0].getPricePolicy().setPricePolicy(1.50);
+		it.getParts()[1].getPricePolicy().setPricePolicy(1.10);
+		it.getParts()[2].getPricePolicy().setPricePolicy(0.92);
+		it.getParts()[3].getPricePolicy().setPricePolicy(2);
+		
+		System.out.println("\nNew Part(s) Added And Some Changes Are Done...\n");
+		
+		it.display(); 
+		System.out.println("Total Price : " + it.totalPrice() + "\n\n");
+	}
+}
+
+abstract class Part {
 	
 	//attributes
 	private String name;
@@ -36,37 +68,7 @@ public abstract class Part {
 		System.out.println("Price : " + getPrice());
 		System.out.println("Price Policy : " + getPricePolicy().getFactor());
 		System.out.println("Brand : " + getBrand().getBrandName());
-	}
-	
-	// #Main# //
-	public static void main(String[] args) {
-		
-		Iterator it = new Iterator(4);
-		it.getParts()[0] = new Motherboard("Motherboard", "ABC", 123, new PricePolicy(), 
-				new Brand("Samsung"));
-		it.getParts()[1] = new Memory("Memory", "DEF", 456, new PricePolicy(), 
-				new Brand("Intel"), "16 GB");
-		it.getParts()[2] = new HardDisk("Hard Disk", "GHI", 259, new PricePolicy(), 
-				new Brand("Western Digital"), 
-				"1 TB", "2.5 inc");
-		
-		it.display();
-		System.out.println("Total Price : " + it.totalPrice() + "\n\n");
-		
-		
-		it.getParts()[3] = new OpticalDiskDriver("Optical Disk Driver","ABC", 78, 
-				new PricePolicy(), new Brand("HTC"));
-		
-		it.getParts()[0].pricePolicy.setPricePolicy(1.50);
-		it.getParts()[1].pricePolicy.setPricePolicy(1.10);
-		it.getParts()[2].pricePolicy.setPricePolicy(0.92);
-		it.getParts()[3].pricePolicy.setPricePolicy(2);
-		
-		System.out.println("\nNew Part(s) Added And Some Changes Are Done...\n");
-		
-		it.display();
-		System.out.println("Total Price : " + it.totalPrice() + "\n\n");
-	}
+	} 
 }
 
 class PricePolicy {
