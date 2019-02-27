@@ -102,14 +102,19 @@ class MyThread1 extends Lab3 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
-		synchronized(getHashMap()) {
+		synchronized (getHashMap()){
 		for(int i=0; i<words.length ; i++) {
 			if(this.getHashMap().get(words[i])==null)
 				this.getHashMap().put(words[i], 1);
-			else
-				this.getHashMap().put(words[i], this.getHashMap().get(words[i]) + 1);
+			else {
+				int c = this.getHashMap().get(words[i]);
+				c--;
+				c++;
+				this.getHashMap().put(words[i], c+1);
+			}
 		}
 		}
+		
 	}
 }
 
@@ -126,13 +131,11 @@ class MyThread2 extends Lab3 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
-		synchronized (this) {
-			for(int i=0; i<words.length ; i++) {
-				if(this.getHashMapLoc().get(words[i])==null)
-					this.getHashMapLoc().put(words[i], getFileName());
-				else if(! getHashMapLoc().get(words[i]).contains(getFileName()))
-					getHashMapLoc().put(words[i], getHashMapLoc().get(words[i]) + ", " + getFileName());
-			}
+		for(int i=0; i<words.length ; i++) {
+			if(this.getHashMapLoc().get(words[i])==null)
+				this.getHashMapLoc().put(words[i], getFileName());
+			else if(! getHashMapLoc().get(words[i]).contains(getFileName()))
+				getHashMapLoc().put(words[i], getHashMapLoc().get(words[i]) + ", " + getFileName());
 		}
 	}
 }
