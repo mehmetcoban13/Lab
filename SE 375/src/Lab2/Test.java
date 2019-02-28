@@ -1,30 +1,10 @@
+package Lab2;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Scanner;
 /* !! IMPORTANT -- ADD "file1", "file2", and "file3" as an argument, copy-paste to the Java project as well !! */
 
-public class Lab2 {
-	
-	//attributes
-	private String fileName;
-	private Hashtable<String, Integer> hashMap;
-	private Hashtable<String, String> hashMapLoc;
-	
-	//setters-getters
-	public void setHashMap(Hashtable<String, Integer> hashMap) { this.hashMap = hashMap; }
-	public void setHashMapLoc(Hashtable<String, String> hashMapLoc) { this.hashMapLoc = hashMapLoc; }
-	public String getFileName() { return fileName; }
-	public Hashtable<String, Integer> getHashMap() { return hashMap; }
-	public Hashtable<String, String> getHashMapLoc() { return hashMapLoc; }
-	
-	// Lab2 Body Methods
-	public Lab2(String fileName) { this.fileName = fileName; }
-	protected String[] splitWords(String line, String split) {
-		line = line.trim();
-		line = line.replace(",", "");
-		line = line.replace(".", "");
-		return line.split(split);
-	}
+public class Test {
 	
 	public static void main(String[] args) {
 		
@@ -55,7 +35,6 @@ public class Lab2 {
 					DS1[0].put(k, (v + DS1[0].get(k)));
 	        });
 		}
-		
 		System.out.println("\nThere are " + DS1[0].size() + " distinct words in files file1, file2, file3.");
 		
 		/* Query a word how many time(s) appears */
@@ -96,6 +75,8 @@ public class Lab2 {
 	        });
 		}
 		
+		System.out.println("\nThere are " + DS2[0].size() + " distinct words in files file1, file2, file3.");
+		
 		/* Query a word where appears in the files */
 		System.out.print("\nSearch a word to query in which file(s) contains(case sensitive!) : ");
 		query = new Scanner(System.in).nextLine();
@@ -104,6 +85,31 @@ public class Lab2 {
 			System.out.println("\nThe word '" + query + "' appears in " + DS2[0].get(query) + ".\n");
 		else 
 			System.out.println("\nThe word '" + query + "' does not exist in these files.\n");
+	}
+}
+
+class Lab2 {
+	
+	//attributes
+	private String fileName;
+	private Hashtable<String, Integer> hashMap;
+	private Hashtable<String, String> hashMapLoc;
+	
+	//setters-getters
+	public void setHashMap(Hashtable<String, Integer> hashMap) { this.hashMap = hashMap; }
+	public void setHashMapLoc(Hashtable<String, String> hashMapLoc) { this.hashMapLoc = hashMapLoc; }
+	public String getFileName() { return fileName; }
+	public Hashtable<String, Integer> getHashMap() { return hashMap; }
+	public Hashtable<String, String> getHashMapLoc() { return hashMapLoc; }
+	
+	// Lab2 Body Methods
+	public Lab2(String fileName) { this.fileName = fileName; }
+	
+	protected String[] splitWords(String line, String split) {
+		line = line.trim();
+		line = line.replace(",", "");
+		line = line.replace(".", "");
+		return line.split(split);
 	}
 }
 

@@ -1,30 +1,10 @@
+package Lab3;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Scanner;
 /* !! IMPORTANT -- ADD "file1", "file2", and "file3" as an argument, copy-paste to the Java project as well !! */
 
-public class Lab3 {
-	
-	//attributes
-	private String fileName;
-	private Hashtable<String, Integer> hashMap;
-	private Hashtable<String, String> hashMapLoc;
-	
-	//setters-getters
-	public void setHashMap(Hashtable<String, Integer> hashMap) { this.hashMap = hashMap; }
-	public void setHashMapLoc(Hashtable<String, String> hashMapLoc) { this.hashMapLoc = hashMapLoc; }
-	public String getFileName() { return fileName; }
-	public Hashtable<String, Integer> getHashMap() { return hashMap; }
-	public Hashtable<String, String> getHashMapLoc() { return hashMapLoc; }
-	
-	// Lab2 Body Methods
-	public Lab3(String fileName) { this.fileName = fileName; }
-	protected String[] splitWords(String line, String split) {
-		line = line.trim();
-		line = line.replace(",", "");
-		line = line.replace(".", "");
-		return line.split(split);
-	}
+public class Test {
 	
 	public static void main(String[] args) {
 		
@@ -89,6 +69,32 @@ public class Lab3 {
 	}
 }
 
+
+class Lab3 {
+	
+	//attributes
+	private String fileName;
+	private Hashtable<String, Integer> hashMap;
+	private Hashtable<String, String> hashMapLoc;
+	
+	//setters-getters
+	public void setHashMap(Hashtable<String, Integer> hashMap) { this.hashMap = hashMap; }
+	public void setHashMapLoc(Hashtable<String, String> hashMapLoc) { this.hashMapLoc = hashMapLoc; }
+	public String getFileName() { return fileName; }
+	public Hashtable<String, Integer> getHashMap() { return hashMap; }
+	public Hashtable<String, String> getHashMapLoc() { return hashMapLoc; }
+	
+	// Lab2 Body Methods
+	public Lab3(String fileName) { this.fileName = fileName; }
+	
+	protected String[] splitWords(String line, String split) {
+		line = line.trim();
+		line = line.replace(",", "");
+		line = line.replace(".", "");
+		return line.split(split);
+	}
+}
+
 class MyThread1 extends Lab3 implements Runnable {
 	
 	public MyThread1(String fileName, Hashtable<String, Integer> hashMap)
@@ -102,19 +108,15 @@ class MyThread1 extends Lab3 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
-		synchronized (getHashMap()){
-		for(int i=0; i<words.length ; i++) {
-			if(this.getHashMap().get(words[i])==null)
-				this.getHashMap().put(words[i], 1);
-			else {
-				int c = this.getHashMap().get(words[i]);
-				c--;
-				c++;
-				this.getHashMap().put(words[i], c+1);
+		/* It prevents synchronization problem of hashtable which is used as shared by threads*/
+		synchronized (getHashMap()){ 
+			for(int i=0; i<words.length ; i++) {
+				if(this.getHashMap().get(words[i])==null)
+					this.getHashMap().put(words[i], 1);
+				else 
+					this.getHashMap().put(words[i], getHashMap().get(words[i]) + 1);
 			}
 		}
-		}
-		
 	}
 }
 
@@ -131,11 +133,14 @@ class MyThread2 extends Lab3 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
-		for(int i=0; i<words.length ; i++) {
-			if(this.getHashMapLoc().get(words[i])==null)
-				this.getHashMapLoc().put(words[i], getFileName());
-			else if(! getHashMapLoc().get(words[i]).contains(getFileName()))
-				getHashMapLoc().put(words[i], getHashMapLoc().get(words[i]) + ", " + getFileName());
+		/* It prevents synchronization problem of hashtable which is used as shared by threads*/
+		synchronized (getHashMapLoc()){
+			for(int i=0; i<words.length ; i++) {
+				if(this.getHashMapLoc().get(words[i])==null)
+					this.getHashMapLoc().put(words[i], getFileName());
+				else if(! getHashMapLoc().get(words[i]).contains(getFileName()))
+					getHashMapLoc().put(words[i], getHashMapLoc().get(words[i]) + ", " + getFileName());
+			}
 		}
 	}
 }

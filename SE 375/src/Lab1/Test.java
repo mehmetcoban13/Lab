@@ -1,12 +1,16 @@
+package Lab1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
 import java.util.Scanner; 
 
 /* !! IMPORTANT -- ADD "file1", "file2", and "file3" as an argument, copy-paste to the Java project as well !! */
-public class Lab1 {
+public class Test {
 
 	public static void main(String[] args) {
+		
+		Scanner scan = new Scanner(System.in);
+		/* scanner object to get input from keyboard for query a word */
 		
 		Hashtable<String, Integer> hashMapWordCtr = new Hashtable<String, Integer>();
 		/* To keep the number of appearances of the words. */
@@ -45,7 +49,7 @@ public class Lab1 {
 		
 		/* Query a word how many time(s) appears */
 		System.out.print("\nSearch a word to query how many times there are(case sensitive!) : ");
-		query = new Scanner(System.in).nextLine();
+		query = scan.nextLine();
 		
 		if(hashMapWordCtr.get(query)!=null) 
 			System.out.println("\nThe word '" + query + "' appears " + hashMapWordCtr.get(query) + " time(s)...\n");
@@ -76,13 +80,14 @@ public class Lab1 {
 		
 		/* Query a word where appears in the files */
 		System.out.print("\nSearch a word to query in which file(s) contains(case sensitive!) : ");
-		query = new Scanner(System.in).nextLine();
+		query = scan.nextLine();
 		
 		if(hashMapWordPlace.get(query)!=null) 
 			System.out.println("\nThe word '" + query + "' appears in " + hashMapWordPlace.get(query) + ".\n");
 		else 
 			System.out.println("\nThe word '" + query + "' does not exist in these files.\n");
 		
+		scan.close();
 	}
 	
 	/* This function removes all commas and dots and does the splitting job according to String "split" */
