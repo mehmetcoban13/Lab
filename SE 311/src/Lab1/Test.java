@@ -1,6 +1,52 @@
 package Lab1;
 
-public abstract class Part {
+public class Test {
+	
+	public static void main(String[] args) {
+		
+		Part[] computerParts = new Part[4];
+		computerParts[0] = new Motherboard("ABC", 123, new PricePolicy(), new Brand("Samsung"));
+		computerParts[1] = new Memory("DEF", 456, new PricePolicy(), new Brand("Intel"), "16 GB");
+		computerParts[2] = new HardDisk("GHI", 259, new PricePolicy(), new Brand("Western Digital"), 
+				"1 TB", "2.5 inc");
+		
+		System.out.println(" --- *Computer Parts* ---\n");
+		
+		try{
+			for(int i=0; i < computerParts.length; i++) {
+				computerParts[i].print(); System.out.println();
+			}
+		} catch(NullPointerException e) {}
+			
+		System.out.println("Total Price : " + totalPrice(computerParts) + "\n\n");
+			
+		
+		computerParts[3] = new OpticalDiskDriver("ABC", 78, new PricePolicy(), new Brand("HTC"));
+		computerParts[1].getPricePolicy().setPrice(1.10);
+		computerParts[2].getPricePolicy().setPrice(0.92);
+		
+		System.out.println("\nNew Part(s) Added And Some Changes Are Done...\n");
+		
+		System.out.println(" --- *Computer Parts* ---\n");
+		
+		try{
+			for(int i=0; i < computerParts.length; i++) {
+				computerParts[i].print(); System.out.println();
+			}
+		} catch(NullPointerException e) {}
+		
+		System.out.println("New Total Price : " + totalPrice(computerParts));
+	}
+	
+	public static double totalPrice(Part parts[]) { /* A Method That Calculates Total Price of An Array of Parts */
+		double total = 0.0;
+		try { for (int i = 0; i < parts.length; i++) { total += parts[i].getPrice(); } }
+		catch(NullPointerException e) { /*Do Nothing */ }
+		return total;
+	}
+}
+
+abstract class Part {
 	
 	//attributes
 	private String model;
@@ -24,67 +70,12 @@ public abstract class Part {
 		this.brand = brand;
 	}
 	
-	static double totalPrice(Part parts[]) { /* A Method That Calculates Total Price of An Array of Parts */
-		double total = 0.0;
-		try { for (int i = 0; i < parts.length; i++) { total += parts[i].getPrice(); } }
-		catch(NullPointerException e) { /*Do Nothing */ }
-		return total;
-	}
-	
 	public void print() {
 		System.out.println("Model : " + getModel());
 		System.out.println("Price : " + getPrice());
 		System.out.println("Price Policy : " + getPricePolicy().getFactor());
 		System.out.println("Brand : " + getBrand().getBrandName());
 	}
-	
-	// #Main# //
-	public static void main(String[] args) {
-		
-		Part[] computerParts = new Part[4];
-		computerParts[0] = new Motherboard("ABC", 123, new PricePolicy(), new Brand("Samsung"));
-		computerParts[1] = new Memory("DEF", 456, new PricePolicy(), new Brand("Intel"), "16 GB");
-		computerParts[2] = new HardDisk("GHI", 259, new PricePolicy(), new Brand("Western Digital"), 
-				"1 TB", "2.5 inc");
-		
-		System.out.println(" --- *Computer Parts* ---\n");
-		
-		try{
-			for(int i=0; i < computerParts.length; i++) {
-				computerParts[i].print(); System.out.println();
-			}
-		} catch(NullPointerException e) {}
-			
-		System.out.println("Total Price : " + totalPrice(computerParts) + "\n\n");
-		
-		
-		
-		computerParts[3] = new OpticalDiskDriver("ABC", 78, new PricePolicy(), new Brand("HTC"));
-		computerParts[1].pricePolicy.setPrice(1.10);
-		computerParts[2].pricePolicy.setPrice(0.92);
-		
-		System.out.println("\nNew Part(s) Added And Some Changes Are Done...\n");
-		
-		System.out.println(" --- *Computer Parts* ---\n");
-		
-		try{
-			for(int i=0; i < computerParts.length; i++) {
-				computerParts[i].print(); System.out.println();
-			}
-		} catch(NullPointerException e) {}
-		
-		System.out.println("New Total Price : " + totalPrice(computerParts));
-	}
-}
-
-class PricePolicy {
-	
-	private double factor = 1;
-	
-	public void setPrice (double factor) { this.factor = factor; }
-	public double getPrice(double price) { return price * this.factor; }
-	public double getFactor() { return this.factor; }
-	
 }
 
 class Motherboard extends Part {
@@ -137,6 +128,16 @@ class OpticalDiskDriver extends Part{
 	public OpticalDiskDriver(String model, double price, PricePolicy pricePolicy, Brand brand) {
 		super(model, price, pricePolicy, brand);
 	}
+}
+
+class PricePolicy {
+	
+	private double factor = 1;
+	
+	public void setPrice (double factor) { this.factor = factor; }
+	public double getPrice(double price) { return price * this.factor; }
+	public double getFactor() { return this.factor; }
+	
 }
 
 class Brand {

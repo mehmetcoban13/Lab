@@ -71,16 +71,6 @@ abstract class Part {
 	} 
 }
 
-class PricePolicy {
-	
-	private double factor = 1;
-	
-	public void setPricePolicy (double factor) { this.factor = factor; }
-	public double getPrice(double price) { return price * this.factor; }
-	public double getFactor() { return this.factor; }
-	
-}
-
 class Motherboard extends Part {
 
 	public Motherboard(String name, String model, double price, PricePolicy pricePolicy, Brand brand) {
@@ -131,6 +121,16 @@ class OpticalDiskDriver extends Part{
 	public OpticalDiskDriver(String name, String model, double price, PricePolicy pricePolicy, Brand brand) {
 		super(name, model, price, pricePolicy, brand);
 	}
+}
+
+class PricePolicy {
+	
+	private double factor = 1;
+	
+	public void setPricePolicy (double factor) { this.factor = factor; }
+	public double getPrice(double price) { return price * this.factor; }
+	public double getFactor() { return this.factor; }
+	
 }
 
 class Brand {
