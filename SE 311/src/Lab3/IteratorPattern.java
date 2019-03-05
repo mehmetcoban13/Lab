@@ -132,8 +132,8 @@ class Collection implements AbstractAggregate {
 		if(type.equals("odd")) {
 			if(Integer.parseInt(item.getName()) % 2 == 0) {
 				try { throw new Exception(); } 
-				catch (Exception e) { System.out.println(item.getName() + " is invalid number ! "
-						+ "It should be an odd number..."); }
+				catch (Exception e) { System.out.println(item.getName() + " is invalid number !"
+						+ " It should be an odd number..."); }
 				return;
 			}
 		}
