@@ -21,31 +21,34 @@ import java.util.ArrayList;
 
 public class IteratorPattern {	
 	static void printAggregate(AbstractIterator i) {
-		System.out.println("\nIterating over collection:");
+		System.out.println("Iterating over collection:");
 		for(i.First();  !i.IsDone(); i.Next()) {
 			System.out.println(i.CurrentItem().getName());
 		}
 		System.out.println();
 	}
-	public static void main(String[] args)  {
+	
+	public static void main(String[] args) {
 		// Create Aggregate.
 		AbstractAggregate aggregate = new Collection();
+		aggregate.add(new Item("Item 0"));
+		aggregate.add(new Item("Item 1"));
+		aggregate.add(new Item("Item 2"));
+		aggregate.add(new Item("Item 3"));
+		aggregate.add(new Item("Item 4"));
+		aggregate.add(new Item("Item 5"));
+		aggregate.add(new Item("Item 6"));
+		aggregate.add(new Item("Item 7"));
+		aggregate.add(new Item("Item 8"));
 		
 		// Create Iterator
-		AbstractIterator iterator = aggregate.CreateIterator("odd", 4);;
+		AbstractIterator iterator = aggregate.CreateIterator("regular", 0);
 		
-		aggregate.add(new Item("0"));
-		aggregate.add(new Item("1"));
-		aggregate.add(new Item("2"));
-		aggregate.add(new Item("3"));
-		aggregate.add(new Item("4"));
-		aggregate.add(new Item("5"));
-		aggregate.add(new Item("6"));
-		aggregate.add(new Item("7"));
-		aggregate.add(new Item("8"));
+		AbstractIterator iterator2 = aggregate.CreateIterator("odd", 1);
 		
 		// Traverse the Aggregate.
 		printAggregate(iterator);
+		printAggregate(iterator2);
 	}
 }
 
@@ -55,7 +58,7 @@ public class IteratorPattern {
 
 class Item {
 	public Item(String name) { _name = name; }
-	public String getName() { return _name;}
+	public String getName() { return _name; }
 	private String _name;
 }
 
@@ -77,16 +80,28 @@ interface  AbstractIterator {
 //
 
 class CollectionIterator implements AbstractIterator {
-	public void First() {_current = _collection.getIndex();}
-	public void Next()  {_current++; }
-	public Item CurrentItem() { return (IsDone()?null:_collection.get(_current)); }
-	public Boolean IsDone() {	return _current >= _collection.getCount(); }
-	public CollectionIterator(Collection collection) {
-		_collection = collection; 
-		_current = collection.getIndex();
-	}
+	private int index;
+	private String type;
 	private Collection _collection;
 	private int _current;
+	
+	public void First() {
+		_current = index;
+	}
+	public void Next()  {
+		if(type.equals("odd"))
+			_current +=2;
+		else if(type.equals("regular"))
+			_current++;
+	}
+	public Item CurrentItem() { return (IsDone()?null:_collection.get(_current)); }
+	public Boolean IsDone() {	return _current >= _collection.getCount(); }
+	public CollectionIterator(Collection collection, String type, int index) {
+		_collection = collection;
+		this.type = type;
+		this.index = index;
+		_current = index;
+	}
 }
 
 
@@ -96,7 +111,7 @@ class CollectionIterator implements AbstractIterator {
 //
 
 interface AbstractAggregate {
-	public AbstractIterator CreateIterator(String typ, int ind);
+	public AbstractIterator CreateIterator(String type, int index);
 	public void add(Item it); 		// Not needed for iteration.
 	public int getCount (); // Needed for iteration.
 	public Item get(int idx); // Needed for iteration.
@@ -109,35 +124,18 @@ interface AbstractAggregate {
 
 class Collection implements AbstractAggregate {
 	private	 ArrayList<Item> _items = new ArrayList<Item>();
-	private String type;
-	private int index;
-	public	CollectionIterator CreateIterator(String type, int index){
-		setType(type);
-		setIndex(index);
-		return new CollectionIterator(this);
-	}
 	
-	public String getType() { return type; }
-	public void setType(String type) { this.type = type; }
-	public int getIndex() { return index; }
-	public void setIndex(int index) { 
-		if(index>= getCount()) {
-			throw new ArrayIndexOutOfBoundsException("You should enter a valid index !");
+	public	CollectionIterator CreateIterator(String type, int index) {
+		if(index >= getCount() || index<0) {
+			throw new ArrayIndexOutOfBoundsException("Invalid Index !");
 		}
-		this.index = index; 
+		if(type.equals("odd") && index%2 == 0) {
+			throw new NumberFormatException();
+		}
+		return new CollectionIterator(this, type, index);
 	}
 	
 	public int getCount () {return _items.size(); }
-	public void add(Item item) {
-		if(type.equals("odd")) {
-			if(Integer.parseInt(item.getName()) % 2 == 0) {
-				try { throw new Exception(); } 
-				catch (Exception e) { System.out.println(item.getName() + " is invalid number !"
-						+ " It should be an odd number..."); }
-				return;
-			}
-		}
-		_items.add(item);
-	}
+	public void add(Item item) {_items.add(item);}
 	public Item get(int index) { return _items.get(index);}
 }
