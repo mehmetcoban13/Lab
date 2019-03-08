@@ -41,6 +41,8 @@ public class Test {
 		System.out.println();
 		
 		
+		
+		
 		// #Q-2
 		Hashtable<String, String> DS2 = new Hashtable<String, String>(); /* HashTable Array To Store The Results */
 		Thread[] thr2 = new Thread[args.length]; /* Thread Array for Word Counter */
@@ -95,6 +97,7 @@ class Lab3 {
 	}
 }
 
+/*Class For Thread to Count The Words In The Files*/
 class MyThread1 extends Lab3 implements Runnable {
 	
 	public MyThread1(String fileName, Hashtable<String, Integer> hashMap)
@@ -108,7 +111,7 @@ class MyThread1 extends Lab3 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
-		/* It prevents synchronization problem of hashtable which is used as shared by threads*/
+		/*It prevents synchronization problem of hashtable which is used as shared data structure by threads*/
 		synchronized (getHashMap()){ 
 			for(int i=0; i<words.length ; i++) {
 				if(this.getHashMap().get(words[i])==null)
@@ -120,6 +123,7 @@ class MyThread1 extends Lab3 implements Runnable {
 	}
 }
 
+/*Class For Thread To Keep The Names of The Files Where The Words Appear In*/
 class MyThread2 extends Lab3 implements Runnable {
 
 	public MyThread2(String fileName, Hashtable<String, String> hashMapLoc) 
