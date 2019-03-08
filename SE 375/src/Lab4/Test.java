@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/* !! IMPORTANT -- ADD "file1", "file2", and "file3" as an argument, copy-paste to the Java project as well !! */
+/* !! IMPORTANT -- Please Add "file1", "file2", and "file3" as an argument, copy-paste these files inside the Java project as well !! */
 
 public class Test {
 	
@@ -75,7 +75,7 @@ public class Test {
 }
 
 
-class Lab3 {
+abstract class Lab4 {
 	
 	//attributes
 	private String fileName;
@@ -84,7 +84,7 @@ class Lab3 {
 	public String getFileName() { return fileName; }
 	
 	// Lab2 Body Methods
-	public Lab3(String fileName) { this.fileName = fileName; }
+	public Lab4(String fileName) { this.fileName = fileName; }
 	
 	protected String[] splitWords(String line, String split) {
 		line = line.trim();
@@ -94,7 +94,8 @@ class Lab3 {
 	}
 }
 
-class MyThread1 extends Lab3 implements Runnable {
+/*Class For Thread to Count The Words In The Files*/
+class MyThread1 extends Lab4 implements Runnable {
 	private ConcurrentHashMap<String, Integer> hashMap;
 	
 	public MyThread1(String fileName, ConcurrentHashMap<String, Integer> hashMap)
@@ -108,14 +109,15 @@ class MyThread1 extends Lab3 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
-		for(int i=0; i<words.length ; i++) {		
-			try { hashMap.compute(words[i], (key, val) -> val + 1); }
-			catch(Exception e) { hashMap.computeIfAbsent(words[i], k -> 1); }
+		for(int i=0; i<words.length ; i++) {
+			if(hashMap.computeIfPresent(words[i], (key, val) -> val +1) ==null)
+				hashMap.computeIfAbsent(words[i], k -> 1);
 		}
 	}
 }
 
-class MyThread2 extends Lab3 implements Runnable {
+/*Class For Thread To Keep The Names of The Files Where The Words Appear In*/
+class MyThread2 extends Lab4 implements Runnable {
 	private ConcurrentHashMap<String, String> hashMap;
 	
 	public MyThread2(String fileName, ConcurrentHashMap<String, String> hashMap) 
@@ -131,7 +133,7 @@ class MyThread2 extends Lab3 implements Runnable {
 		
 		for(int i=0; i<words.length ; i++) {
 			if(! hashMap.computeIfAbsent(words[i], k -> getFileName()).contains(getFileName()))
-				hashMap.compute(words[i], (k, v) -> v + "," + getFileName());
+				hashMap.compute(words[i], (k, v) -> v + ", " + getFileName());
 		}
 	}
 }
