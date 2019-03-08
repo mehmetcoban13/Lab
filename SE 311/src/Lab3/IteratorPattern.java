@@ -85,17 +85,20 @@ class CollectionIterator implements AbstractIterator {
 	private Collection _collection;
 	private int _current;
 	
-	public void First() {
-		_current = index;
-	}
+	//methods - body of CollectionIterator Class
+	public void First() { _current = index;}
+	
 	public void Next()  {
-		if(type.equals("odd"))
-			_current +=2;
-		else if(type.equals("regular"))
-			_current++;
+		if(type.equals("odd")) {
+			_current +=2; 
+		}
+		else if(type.equals("regular")) {
+			_current++; 
+		}
 	}
 	public Item CurrentItem() { return (IsDone()?null:_collection.get(_current)); }
 	public Boolean IsDone() {	return _current >= _collection.getCount(); }
+	
 	public CollectionIterator(Collection collection, String type, int index) {
 		_collection = collection;
 		this.type = type;
