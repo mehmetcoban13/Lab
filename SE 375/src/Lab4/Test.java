@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 /* !! IMPORTANT -- Please Add "file1", "file2", and "file3" as an argument, copy-paste these files inside the Java project as well !! */
 
 public class Test {
@@ -12,20 +11,26 @@ public class Test {
 	public static void main(String[] args) {
 		
 		String query; /* A String For User Input */ 
-		
+		Scanner scan = new Scanner(System.in);
 		
 		// #Q-1
+		
+		/*A hash table supporting full concurrency of retrievals and high expected concurrency for updates.*/
 		ConcurrentHashMap<String, Integer> DS1 = new ConcurrentHashMap<String, Integer>();
 		
+		/* -We can summarize it as "Thread Pool". 
+		 * Asynchronous execution mechanism which is capable of executing tasks concurrently in the background.*/
 		ExecutorService executor1 = Executors.newFixedThreadPool(10);
 		
 		for(int i=0; i<args.length; i++) { 
-				executor1.submit(new MyThread1(args[i], DS1));
+				executor1.submit(new MyThread1(args[i], DS1)); /*Initializes a Runnable task*/
 		}
 		
+		/*The shutdown() method, which rejects new tasks and terminates all threads, 
+		 * allows previously submitted tasks to execute before terminating. */
 		executor1.shutdown();
 		
-		while (!executor1.isTerminated()) {}
+		while (!executor1.isTerminated()) { /*Wait until all done*/}
 		System.out.println("Finished all threads");
 		
 		System.out.println("\nThere are " + DS1.size() + " distinct words in files file1, file2, file3.");
@@ -34,14 +39,16 @@ public class Test {
 		
 		/* Query a word how many time(s) appears */
 		System.out.print("\nSearch a word to query how many times there are(case sensitive!) : ");
-		query = new Scanner(System.in).nextLine();
+		query = scan.nextLine();
 		
 		if(DS1.get(query)!=null) 
 			System.out.println("\nThe word '" + query + "' appears " + DS1.get(query) + " time(s)...\n");
 		else 
 			System.out.println("\nThe word '" + query + "' does not exist in these files...\n");
 	
+		
 		System.out.println();
+		
 		
 		
 		
@@ -65,12 +72,14 @@ public class Test {
 		
 		/* Query a word where appears in the files */
 		System.out.print("\nSearch a word to query in which file(s) contains(case sensitive!) : ");
-		query = new Scanner(System.in).nextLine();
+		query = scan.nextLine();
 		
 		if(DS2.get(query)!=null) 
 			System.out.println("\nThe word '" + query + "' appears in " + DS2.get(query) + ".\n");
 		else 
 			System.out.println("\nThe word '" + query + "' does not exist in these files.\n");
+		
+		scan.close();
 	}
 }
 
@@ -109,10 +118,17 @@ class MyThread1 extends Lab4 implements Runnable {
 		try { words = splitWords(new Scanner(new File(getFileName())).nextLine(), " "); }
 		catch(Exception e) {}
 		
+		/*Since retrieval operations (including get) generally do not block, they may overlap with 
+		 * update operations (including put and remove). That can cause synchronization to fail.*/
+		
 		for(int i=0; i<words.length ; i++) {
 			if(hashMap.computeIfPresent(words[i], (key, val) -> val +1) ==null)
 				hashMap.computeIfAbsent(words[i], k -> 1);
 		}
+		/*However, since the entire method invocations of computeIfAbsent(), compute(), computeIfPresent(), 
+		 * and merge() are performed atomically, and the functions are applied at most once per key 
+		 * at a time, they do not cause a synchronization problem for us. So we can use them instead of 
+		 * get(), put(), remove()... functions as a solution.*/
 	}
 }
 
