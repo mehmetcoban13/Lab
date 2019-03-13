@@ -2,49 +2,54 @@ package Lab4;
 import java.util.ArrayList;
 
 // This is the "Component". (i.e tree node.)
-interface CarPart {
-	public String getName();
-	public double getPrice();
+interface Campus {
+	void Add(Campus d);
+	void Remove(Campus d);
 	void Display(int indent);
-	public double totalPrice();
+	
+	public void setID(String id);
+	public String getID();
+	public void setCapacity(String id, int capacity);
+	public int getMax();
 }
 //This is the "Leaf".
-class Leaf implements CarPart {
-	private String name;
-	private double price;
+class Classroom implements Campus {
+	private String id;
+	private int capacity;
 	
-	public void setPrice(double price) { this.price = price; }
-	public String getName() { return name;}
-	public double getPrice() { return price; }
+	public void setID(String id) { this.id = id; }
+	public void setCapacity(String id, int capacity) { 
+		if(this.id.equals(id))
+			this.capacity = capacity;
+	}
+	public String getID() { return this.id ;}
+	public int getCapacity() { return capacity; }
+	public int getMax() { return this.capacity; }
 	
-	public Leaf(String name, double price) {
-		this.name = name;
-		this.price = price;
+	public Classroom(String id, int capacity) {this.id = id; this.capacity = capacity; }
+	public void Add(Campus c) {
+		System.out.println("Cannot add to a classroom.");
+	}
+	public  void Remove(Campus c) {
+		System.out.println("Cannot remove from a classroom.");
 	}
 	public void Display(int indent) {
 		for(int i = 1;i <= indent;i++) 	System.out.print("-");
-		System.out.println(" "  + name);
+		System.out.println(" "  + id);
 	}
-	@Override
-	public double totalPrice() { return price; }
 }
 // This is the "Composite"
-class Composite implements CarPart {
-	private	ArrayList<CarPart> elements = new ArrayList<CarPart>();
-	private String name;
-	private double price;
+class Composite implements Campus {
+	private String id;
+	private	ArrayList<Campus> elements = new ArrayList<Campus>();
 	
-	public String getName() { return name;}
-	public double getPrice() { 
-		for(CarPart cP : elements) { price += cP.totalPrice(); }
-		return price;
-	}
-	
-	public Composite(String name) { this.name = name; price = 0.0; }
-	public void Add(CarPart d) {elements.add(d); }
-	public void Remove(CarPart d) {
+	public void setID(String id) { this.id = id; }
+	public String getID() { return this.id; }
+	public Composite(String id) { this.id = id; }
+	public void Add(Campus d) {elements.add(d);};
+	public void Remove(Campus d) {
 		for (int i = 0; i< elements.size(); i++) {
-			if (elements.get(i).getName() == d.getName()) {
+			if (elements.get(i).getID().equals(d.getID())) {
 				elements.remove(i);
 				return;
 			}
@@ -52,38 +57,70 @@ class Composite implements CarPart {
 	}
 	public	void Display(int indent) {
 		for(int i = 1;i <= indent;i++) System.out.print("-");
-		System.out.println( "+ " + getName());
+		System.out.println( "+ " + getID());
 
 		// Display each child element on this node
 		for (int i= 0; i< elements.size(); i++) {
 			elements.get(i).Display(indent+2);
 		}
 	}
-	@Override
-	public double totalPrice() {
-		return getPrice();
+	public int getMax() {
+		int max=0;
+		for(Campus c : elements) {
+			if (c.getMax() > max)
+				max = c.getMax();
+		}
+		return max;
+	}
+	
+	public void setCapacity(String id, int capacity) {
+		for (int i = 0; i< elements.size(); i++) {
+			elements.get(i).setCapacity(id, capacity);
+		}
 	}
 }
 //This is the "client"
 public class CompositePattern {
 	public static void main(String[] args) {
-	
-		// Create a tree structure
-		CarPart car = new Composite("Car");
-		Composite carParts = new Composite("Car Parts");
-		carParts.Add(new Leaf("Red Line", 5));
-		carParts.Add(new Leaf("Blue Circle", 5));
-		carParts.Add(new Leaf("Green Box", 5));
-
-		Composite comp = new Composite("Two Circles");
-		comp.Add(new Leaf("Black Circle", 5));
-		comp.Add(new Leaf("White Circle",5));
-		carParts.Add(comp);
 		
-		((Composite) car).Add(carParts);
+		//Campus
+		Campus campus = new Composite("Campus");
 		
-		// Recursively display nodes
-		car.Display(1);
-		System.out.println(car.totalPrice());
+		//Buildings
+		Campus EBlock = new Composite("E Block");
+		Campus MBlock = new Composite("M Block");
+		
+		//Floors of "E Block" Building
+		Campus floor1 = new Composite("Floor 1");
+		floor1.Add(new Classroom("E101", 32));
+		floor1.Add(new Classroom("E102", 24));
+		
+		Campus floor2 = new Composite("Floor 2");
+		floor2.Add(new Classroom("E203", 28));
+		floor2.Add(new Classroom("M207", 35));
+		
+		EBlock.Add(floor1);
+		EBlock.Add(floor2);
+		campus.Add(EBlock);
+		
+		//Floors of "M Block" Building
+		Campus floor3 = new Composite("Floor 3");
+		floor3.Add(new Classroom("M304", 68));
+		floor3.Add(new Classroom("M305", 65));
+		
+		Campus floor4 = new Composite("Floor 4");
+		floor4.Add(new Classroom("M404", 58));
+		floor4.Add(new Classroom("M405", 45));
+		
+		MBlock.Add(floor3);
+		MBlock.Add(floor4);
+		campus.Add(MBlock);
+		
+		campus.Display(1);
+		
+		System.out.println(campus.getMax());
+		campus.setCapacity("M405", 165);
+		System.out.println(campus.getMax());
+		
 	}
 }
