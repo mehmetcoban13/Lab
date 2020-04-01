@@ -97,7 +97,8 @@ class CollectionIterator implements AbstractIterator {
 		}
 	}
 	public Item CurrentItem() { return (IsDone()?null:_collection.get(_current)); }
-	public Boolean IsDone() {	return _current >= _collection.getCount(); }
+	
+	public Boolean IsDone() { return _current >= _collection.getCount(); }
 	
 	public CollectionIterator(Collection collection, String type, int index) {
 		_collection = collection;
@@ -115,7 +116,7 @@ class CollectionIterator implements AbstractIterator {
 
 interface AbstractAggregate {
 	public AbstractIterator CreateIterator(String type, int index);
-	public void add(Item it); 		// Not needed for iteration.
+	public void add(Item it); // Not needed for iteration.
 	public int getCount (); // Needed for iteration.
 	public Item get(int idx); // Needed for iteration.
 }
